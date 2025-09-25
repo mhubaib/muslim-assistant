@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     Alert,
     ActivityIndicator,
     KeyboardAvoidingView,
@@ -12,46 +11,29 @@ import {
     ScrollView,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [name, setName] = useState('');
-    const { signUp, loading } = useAuth();
-
-    const validateForm = () => {
-        if (!name || !email || !password || !confirmPassword) {
-            Alert.alert('Error', 'Please fill in all fields');
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match');
-            return false;
-        }
-
-        if (password.length < 6) {
-            Alert.alert('Error', 'Password must be at least 6 characters long');
-            return false;
-        }
-
-        return true;
-    };
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const { signUp, loading, error } = useAuth();
+    const { colors, styles } = useTheme();
 
     const handleRegister = async () => {
-        if (!validateForm()) return;
 
-        const result = await signUp(email, password);
+        const result = await signUp(firstName, lastName, email, password, confirmPassword);
 
-        if (result.success) {
+        if (result) {
             Alert.alert(
                 'Success',
                 'Account created successfully! Please verify your email.',
                 [{ text: 'OK', onPress: () => navigation.navigate('verify-email') }]
             );
         } else {
-            Alert.alert('Registration Failed', result.error);
+            Alert.alert(error);
         }
     };
 
@@ -61,27 +43,39 @@ export default function RegisterScreen({ navigation }) {
 
     return (
         <KeyboardAvoidingView
-            style={styles.container}
+            className={`flex-1 ${styles.bg.primary}`}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>Create Account</Text>
-                    <Text style={styles.subtitle}>Join us on your spiritual journey</Text>
+            <ScrollView className="flex-grow">
+                <View className="flex-1 justify-center px-5 min-h-full">
+                    <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>Create Account</Text>
+                    <Text className={`text-base text-center mb-10 ${styles.text.secondary}`}>Join us on your spiritual journey</Text>
 
-                    <View style={styles.form}>
+                    <View className="w-full">
                         <TextInput
-                            style={styles.input}
+                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                             placeholder="Full Name"
-                            value={name}
-                            onChangeText={setName}
+                            placeholderTextColor={colors.textSecondary}
+                            value={firstName}
+                            onChangeText={setFirstName}
                             autoCapitalize="words"
                             autoCorrect={false}
                         />
 
                         <TextInput
-                            style={styles.input}
+                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
+                            placeholder="Full Name"
+                            placeholderTextColor={colors.textSecondary}
+                            value={lastName}
+                            onChangeText={setLastName}
+                            autoCapitalize="words"
+                            autoCorrect={false}
+                        />
+
+                        <TextInput
+                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                             placeholder="Email"
+                            placeholderTextColor={colors.textSecondary}
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
@@ -90,8 +84,9 @@ export default function RegisterScreen({ navigation }) {
                         />
 
                         <TextInput
-                            style={styles.input}
+                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                             placeholder="Password"
+                            placeholderTextColor={colors.textSecondary}
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
@@ -99,8 +94,9 @@ export default function RegisterScreen({ navigation }) {
                         />
 
                         <TextInput
-                            style={styles.input}
+                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                             placeholder="Confirm Password"
+                            placeholderTextColor={colors.textSecondary}
                             value={confirmPassword}
                             onChangeText={setConfirmPassword}
                             secureTextEntry
@@ -108,21 +104,21 @@ export default function RegisterScreen({ navigation }) {
                         />
 
                         <TouchableOpacity
-                            style={[styles.registerButton, loading && styles.disabledButton]}
+                            className={`${loading ? 'bg-gray-400' : styles.button.primary} p-4 rounded-lg items-center mt-2`}
                             onPress={handleRegister}
                             disabled={loading}
                         >
                             {loading ? (
                                 <ActivityIndicator color="#ffffff" />
                             ) : (
-                                <Text style={styles.registerButtonText}>Create Account</Text>
+                                <Text className="text-white text-base font-semibold">Create Account</Text>
                             )}
                         </TouchableOpacity>
 
-                        <View style={styles.loginContainer}>
-                            <Text style={styles.loginText}>Already have an account? </Text>
+                        <View className="flex-row justify-center mt-5">
+                            <Text className={`text-base ${styles.text.secondary}`}>Already have an account? </Text>
                             <TouchableOpacity onPress={navigateToLogin}>
-                                <Text style={styles.loginLink}>Sign In</Text>
+                                <Text className={`text-base ${styles.text.accent} font-semibold`}>Sign In</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -131,73 +127,3 @@ export default function RegisterScreen({ navigation }) {
         </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#ffffff',
-    },
-    scrollContainer: {
-        flexGrow: 1,
-    },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-        minHeight: '100%',
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-        color: '#333',
-    },
-    subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginBottom: 40,
-        color: '#666',
-    },
-    form: {
-        width: '100%',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        padding: 15,
-        marginBottom: 15,
-        fontSize: 16,
-        backgroundColor: '#f9f9f9',
-    },
-    registerButton: {
-        backgroundColor: '#4CAF50',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    disabledButton: {
-        backgroundColor: '#cccccc',
-    },
-    registerButtonText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    loginContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    loginText: {
-        fontSize: 16,
-        color: '#666',
-    },
-    loginLink: {
-        fontSize: 16,
-        color: '#4CAF50',
-        fontWeight: '600',
-    },
-});

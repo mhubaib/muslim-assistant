@@ -4,18 +4,19 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     Alert,
     ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn, loading } = useAuth();
+    const { colors, styles } = useTheme();
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -37,17 +38,18 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <KeyboardAvoidingView
-            style={styles.container}
+            className={`flex-1 ${styles.bg.primary}`}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <View style={styles.content}>
-                <Text style={styles.title}>Welcome Back</Text>
-                <Text style={styles.subtitle}>Sign in to continue your spiritual journey</Text>
+            <View className="flex-1 justify-center px-5">
+                <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>Welcome Back</Text>
+                <Text className={`text-base text-center mb-10 ${styles.text.secondary}`}>Sign in to continue your spiritual journey</Text>
 
-                <View style={styles.form}>
+                <View className="w-full">
                     <TextInput
-                        style={styles.input}
+                        className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                         placeholder="Email"
+                        placeholderTextColor={colors.textSecondary}
                         value={email}
                         onChangeText={setEmail}
                         keyboardType="email-address"
@@ -56,8 +58,9 @@ export default function LoginScreen({ navigation }) {
                     />
 
                     <TextInput
-                        style={styles.input}
+                        className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
                         placeholder="Password"
+                        placeholderTextColor={colors.textSecondary}
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
@@ -65,21 +68,21 @@ export default function LoginScreen({ navigation }) {
                     />
 
                     <TouchableOpacity
-                        style={[styles.loginButton, loading && styles.disabledButton]}
+                        className={`${loading ? 'bg-gray-400' : styles.button.primary} p-4 rounded-lg items-center mt-2`}
                         onPress={handleLogin}
                         disabled={loading}
                     >
                         {loading ? (
                             <ActivityIndicator color="#ffffff" />
                         ) : (
-                            <Text style={styles.loginButtonText}>Sign In</Text>
+                            <Text className="text-white text-base font-semibold">Sign In</Text>
                         )}
                     </TouchableOpacity>
 
-                    <View style={styles.signupContainer}>
-                        <Text style={styles.signupText}>Don't have an account? </Text>
+                    <View className="flex-row justify-center mt-5">
+                        <Text className={`text-base ${styles.text.secondary}`}>Don't have an account? </Text>
                         <TouchableOpacity onPress={navigateToRegister}>
-                            <Text style={styles.signupLink}>Sign Up</Text>
+                            <Text className={`text-base ${styles.text.accent} font-semibold`}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -87,69 +90,3 @@ export default function LoginScreen({ navigation }) {
         </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#ffffff',
-    },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-        color: '#333',
-    },
-    subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginBottom: 40,
-        color: '#666',
-    },
-    form: {
-        width: '100%',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        padding: 15,
-        marginBottom: 15,
-        fontSize: 16,
-        backgroundColor: '#f9f9f9',
-    },
-    loginButton: {
-        backgroundColor: '#4CAF50',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    disabledButton: {
-        backgroundColor: '#cccccc',
-    },
-    loginButtonText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    signupContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    signupText: {
-        fontSize: 16,
-        color: '#666',
-    },
-    signupLink: {
-        fontSize: 16,
-        color: '#4CAF50',
-        fontWeight: '600',
-    },
-});

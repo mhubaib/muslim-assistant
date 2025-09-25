@@ -24,15 +24,13 @@ export default function AppNavigator() {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {/* If user hasn't completed onboarding, show onboarding */}
+
                 {!hasCompletedOnboarding ? (
                     <Stack.Screen name='on-boarding' component={OnBoardingScreen} />
                 ) : (
-                    // If user has completed onboarding but is not authenticated, show auth
                     !user ? (
                         <Stack.Screen name='auth' component={AuthNavigator} />
                     ) : (
-                        // If user is authenticated, show main app
                         <Stack.Screen name='main' component={DrawerNavigator} />
                     )
                 )}

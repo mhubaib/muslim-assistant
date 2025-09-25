@@ -1,29 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const OnBoardingScreen = ({ navigation }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedTheme, setSelectedTheme] = useState(null);
     const { completeOnboarding } = useAuth();
+    const { changeTheme, styles } = useTheme();
 
     const steps = [
         'theme-selection',
         'location-permission',
         'complete'
     ];
-
-    const handleThemeSelection = async (theme) => {
-        try {
-            await AsyncStorage.setItem('selectedTheme', theme);
-            setSelectedTheme(theme);
-            setCurrentStep(1);
-        } catch (error) {
-            console.error('Error saving theme:', error);
-        }
-    };
 
     const requestLocationPermission = async () => {
         try {
@@ -37,8 +29,7 @@ const OnBoardingScreen = ({ navigation }) => {
                     'Permission Required',
                     'Location permission is needed to provide accurate prayer times for your area.',
                     [
-                        { text: 'Skip', onPress: () => setCurrentStep(2) },
-                        { text: 'Try Again', onPress: requestLocationPermission }
+                        { text: 'Try Again', onPress: () => setCurrentStep(1) }
                     ]
                 );
             }
@@ -50,67 +41,77 @@ const OnBoardingScreen = ({ navigation }) => {
 
     const completeOnboardingFlow = async () => {
         await completeOnboarding();
-        navigation.replace('auth');
+        navigation.replace('auth', { screen: 'register'});
     };
 
     const renderThemeSelection = () => (
-        <View style={styles.container}>
-            <Text style={styles.title}>Choose Your Theme</Text>
-            <Text style={styles.subtitle}>Select your preferred app theme</Text>
+        <View className={`flex-1 justify-center items-center px-5 ${styles.bg.primary}`}>
+            <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>Choose Your Theme</Text>
+            <Text className={`text-base text-center mb-10 ${styles.text.secondary} leading-6`}>Select your preferred app theme</Text>
 
-            <View style={styles.themeContainer}>
+            <View className="flex-row justify-around w-full">
                 <TouchableOpacity
-                    style={[styles.themeOption, selectedTheme === 'light' && styles.selectedTheme]}
-                    onPress={() => handleThemeSelection('light')}
+                    className={`items-center p-5 rounded-xl border-2 ${selectedTheme === 'light' ? styles.border.accent + ' ' + styles.bg.card : styles.border.default + ' ' + styles.bg.surface}`}
+                    onPress={() => {
+                        setSelectedTheme('light');
+                        changeTheme('light');
+                        setCurrentStep(1);
+                    }}
                 >
-                    <View style={styles.lightThemePreview} />
-                    <Text style={styles.themeText}>Light Theme</Text>
+                    <View className="w-15 h-15 rounded-full bg-white border border-gray-300 mb-2" />
+                    <Text className={`text-base font-semibold ${styles.text.primary}`}>Light Theme</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.themeOption, selectedTheme === 'dark' && styles.selectedTheme]}
-                    onPress={() => handleThemeSelection('dark')}
+                    className={`items-center p-5 rounded-xl border-2 ${selectedTheme === 'dark' ? styles.border.accent + ' ' + styles.bg.card : styles.border.default + ' ' + styles.bg.surface}`}
+                    onPress={() => {
+                        setSelectedTheme('dark');
+                        changeTheme('dark');
+                        setCurrentStep(1);
+                    }}
                 >
-                    <View style={styles.darkThemePreview} />
-                    <Text style={styles.themeText}>Dark Theme</Text>
+                    <View className="w-15 h-15 rounded-full bg-gray-800 mb-2" />
+                    <Text className={`text-base font-semibold ${styles.text.primary}`}>Dark Theme</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 
     const renderLocationPermission = () => (
-        <View style={styles.container}>
-            <Text style={styles.title}>Location Permission</Text>
-            <Text style={styles.subtitle}>
+        <View className={`flex-1 justify-center items-center px-5 ${styles.bg.primary}`}>
+            <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>Location Permission</Text>
+            <Text className={`text-base text-center mb-10 ${styles.text.secondary} leading-6`}>
                 We need access to your location to provide accurate prayer times for your area.
             </Text>
 
-            <View style={styles.permissionContainer}>
-                <View style={styles.locationIcon} />
-                <Text style={styles.permissionText}>
+            <View className="items-center mb-10">
+                <View className={`w-20 h-20 rounded-full mb-5 ${styles.button.primary}`} />
+                <Text className={`text-base text-center ${styles.text.secondary} leading-6`}>
                     This helps us determine your local prayer times based on your geographical location.
                 </Text>
             </View>
 
-            <TouchableOpacity style={styles.primaryButton} onPress={requestLocationPermission}>
-                <Text style={styles.buttonText}>Grant Location Permission</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.secondaryButton} onPress={() => setCurrentStep(2)}>
-                <Text style={styles.secondaryButtonText}>Skip for Now</Text>
+            <TouchableOpacity
+                className={`${styles.button.primary} py-4 px-8 rounded-lg mb-4 w-4/5`}
+                onPress={requestLocationPermission}
+            >
+                <Text className="text-white text-base font-semibold text-center">Grant Location Permission</Text>
             </TouchableOpacity>
         </View>
     );
 
     const renderComplete = () => (
-        <View style={styles.container}>
-            <Text style={styles.title}>All Set!</Text>
-            <Text style={styles.subtitle}>
+        <View className={`flex-1 justify-center items-center px-5 ${styles.bg.primary}`}>
+            <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>All Set!</Text>
+            <Text className={`text-base text-center mb-10 ${styles.text.secondary} leading-6`}>
                 Your preferences have been saved. Let's get started with your spiritual journey.
             </Text>
 
-            <TouchableOpacity style={styles.primaryButton} onPress={completeOnboardingFlow}>
-                <Text style={styles.buttonText}>Continue to App</Text>
+            <TouchableOpacity
+                className={`${styles.button.primary} py-4 px-8 rounded-lg w-4/5`}
+                onPress={completeOnboardingFlow}
+            >
+                <Text className="text-white text-base font-semibold text-center">Continue to App</Text>
             </TouchableOpacity>
         </View>
     );
@@ -129,16 +130,14 @@ const OnBoardingScreen = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.wrapper}>
+        <View className={`flex-1 ${styles.bg.primary}`}>
             {/* Progress indicator */}
-            <View style={styles.progressContainer}>
+            <View className="flex-row justify-center pt-12 pb-5">
                 {steps.map((_, index) => (
                     <View
                         key={index}
-                        style={[
-                            styles.progressDot,
-                            index <= currentStep && styles.progressDotActive
-                        ]}
+                        className={`w-2.5 h-2.5 rounded-full mx-1 ${index <= currentStep ? styles.button.primary : 'bg-gray-300'
+                            }`}
                     />
                 ))}
             </View>
@@ -147,129 +146,5 @@ const OnBoardingScreen = ({ navigation }) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    wrapper: {
-        flex: 1,
-        backgroundColor: '#ffffff',
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    progressContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingTop: 50,
-        paddingBottom: 20,
-    },
-    progressDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#e0e0e0',
-        marginHorizontal: 5,
-    },
-    progressDotActive: {
-        backgroundColor: '#4CAF50',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-        color: '#333',
-    },
-    subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginBottom: 40,
-        color: '#666',
-        lineHeight: 24,
-    },
-    themeContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-    },
-    themeOption: {
-        alignItems: 'center',
-        padding: 20,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: '#e0e0e0',
-        backgroundColor: '#f9f9f9',
-    },
-    selectedTheme: {
-        borderColor: '#4CAF50',
-        backgroundColor: '#e8f5e8',
-    },
-    lightThemePreview: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#ffffff',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        marginBottom: 10,
-    },
-    darkThemePreview: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#333333',
-        marginBottom: 10,
-    },
-    themeText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#333',
-    },
-    permissionContainer: {
-        alignItems: 'center',
-        marginBottom: 40,
-    },
-    locationIcon: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: '#4CAF50',
-        marginBottom: 20,
-    },
-    permissionText: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: '#666',
-        lineHeight: 24,
-    },
-    primaryButton: {
-        backgroundColor: '#4CAF50',
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 8,
-        marginBottom: 15,
-        width: '80%',
-    },
-    buttonText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    secondaryButton: {
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 8,
-        width: '80%',
-    },
-    secondaryButtonText: {
-        color: '#4CAF50',
-        fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-});
 
 export default OnBoardingScreen;
