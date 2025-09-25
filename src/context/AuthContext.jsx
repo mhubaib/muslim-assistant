@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../config/firebase';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { auth, db } from '../config/firebase';
+import { addDoc, doc, serverTimestamp } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { onAuthStateChanged } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 const AuthContext = createContext({});
 
@@ -18,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [initializing, setInitializing] = useState(true);
     const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (usr) => {
@@ -36,8 +38,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const onboardingStatus = await AsyncStorage.getItem('hasCompletedOnboarding');
             setHasCompletedOnboarding(onboardingStatus === 'true');
-        } catch (error) {
-            console.error('Error checking onboarding status:', error);
+        } catch (err) {
+            setError('Error checking onboarding status. Please try again.');
         }
     };
 
@@ -45,8 +47,8 @@ export const AuthProvider = ({ children }) => {
         try {
             await AsyncStorage.setItem('hasCompletedOnboarding', 'true');
             setHasCompletedOnboarding(true);
-        } catch (error) {
-            console.error('Error completing onboarding:', error);
+        } catch (err) {
+            setError('Error completing onboarding. Please try again.');
         }
     };
 
@@ -56,31 +58,80 @@ export const AuthProvider = ({ children }) => {
             await AsyncStorage.removeItem('selectedTheme');
             await AsyncStorage.removeItem('locationPermissionGranted');
             setHasCompletedOnboarding(false);
-        } catch (error) {
-            console.error('Error resetting onboarding:', error);
+        } catch (err) {
+            setError('Error resetting onboarding. Please try again.');
         }
     };
 
-    // Authentication functions
-    const signUp = async (email, password) => {
+    const signUp = async (firstName, lastName, email, password, confirmPassword) => {
         try {
             setLoading(true);
-            const result = await auth().createUserWithEmailAndPassword(email, password);
-            return { success: true, user: result.user };
-        } catch (error) {
-            return { success: false, error: error.message };
+            
+            if (password !== confirmPassword) {
+                setError('Oups! Passwords do not match.');
+                return { success: false };
+            } else if (password.length < 6 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                setError('Oups! Password should be at least 6 characters, 1 uppercase, and 1 number.');
+                return { success: false };
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                setError('Oups! Invalid email address.');
+                return { success: false };
+            } else if (firstName.trim() === '' || lastName.trim() === '') {
+                setError('Oups! First name and last name cannot be empty.');
+                return { success: false };
+            } else {
+                setError(null);
+            }
+
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            await updateProfile(userCredential.user, {
+                displayName: `${firstName} ${lastName}`
+            });
+
+            const account = userCredential.user;
+
+            await addDoc(doc(db, 'users', account.uid), {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                createdAt: serverTimestamp(),
+                uid: user.uid,
+            });
+
+            return { success: true, user: account };
+        } catch (err) {
+            if (err.code === 'auth/email-already-in-use') {
+                setError('Oups! Email already in use.');
+            }
+            else if (err.code === 'auth/invalid-email') {
+                setError('Oups! Invalid email address.');
+            }
+            else if (err.code === 'auth/weak-password') {
+                setError('Oups! Password should be at least 6 characters, 1 uppercase, and 1 number.');
+            }
+            else {
+                setError('Oups! Something went wrong. Please try again.');
+            }
+            return { success: false };
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     const signIn = async (email, password) => {
         try {
             setLoading(true);
-            const result = await auth().signInWithEmailAndPassword(email, password);
+            const result = await signInWithEmailAndPassword(auth, email, password);
             return { success: true, user: result.user };
-        } catch (error) {
-            return { success: false, error: error.message };
+        } catch (err) {
+            if (err.code === 'auth/user-not-found') {
+                setError('Oups! No user found with this email.');
+            } else if (err.code === 'auth/wrong-password') {
+                setError('Oups! Incorrect password. Please try again.');
+            } else {
+                setError('Oups! Something went wrong. Please try again.');
+            }
+            return { success: false };
         } finally {
             setLoading(false);
         }
@@ -89,10 +140,11 @@ export const AuthProvider = ({ children }) => {
     const signOut = async () => {
         try {
             setLoading(true);
-            await auth().signOut();
+            await signOut(auth);
             return { success: true };
-        } catch (error) {
-            return { success: false, error: error.message };
+        } catch (err) {
+            setError('Oups! Something went wrong. Please try again.');
+            return { success: false };
         } finally {
             setLoading(false);
         }
@@ -105,13 +157,15 @@ export const AuthProvider = ({ children }) => {
                 await resetOnboarding();
                 return { success: true };
             }
-        } catch (error) {
-            return { success: false, error: error.message };
+        } catch (err) {
+            setError('Oups! Something went wrong. Please try again.');
+            return { success: false };
         }
     };
 
     const value = {
         user,
+        error,
         loading,
         initializing,
         hasCompletedOnboarding,
