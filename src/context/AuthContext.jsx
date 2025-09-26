@@ -3,7 +3,6 @@ import { auth, db } from '../config/firebase';
 import { addDoc, doc, serverTimestamp } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, signOut as firebaseSignOut } from 'firebase/auth';
-import { Alert } from 'react-native';
 
 const AuthContext = createContext({});
 
@@ -143,10 +142,10 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             await firebaseSignOut(auth);
             return { success: true };
-        } catch (error) {
-            console.error('Logout failed: ', error.message);
+        } catch (err) {
+            console.error('Logout failed: ', err.message);
             setError('Failed to logout. Please try again.');
-            return { success: false, error: error.message };
+            return { success: false, error: error };
         } finally {
             setLoading(false);
         }

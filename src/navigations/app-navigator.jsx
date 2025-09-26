@@ -12,10 +12,9 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
     const { user, initializing, hasCompletedOnboarding } = useAuth();
 
-    // Show loading spinner while Firebase is initializing
     if (initializing) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View className='flex-1 justify-center items-center'>
                 <ActivityIndicator size="large" color="#4CAF50" />
             </View>
         );
