@@ -73,3 +73,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+FIREBASE_SETUP.md
+src/config/
+android/app/google-services.json

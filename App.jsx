@@ -1,19 +1,19 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { enableScreens } from 'react-native-screens';
+import './global.css';
+import AppNavigator from './src/navigations/app-navigator';
+import { AuthProvider } from './src/context/AuthContext';
+import { ThemeProvider } from './src/context/ThemeContext';
+
+enableScreens()
 
 function App() {
-
   return (
-    <View style={styles.container}>
-      <Text>Hello World!</Text>
-    </View>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppNavigator />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
 
 export default App;
