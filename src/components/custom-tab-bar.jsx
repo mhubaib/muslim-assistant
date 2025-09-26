@@ -60,7 +60,7 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
         <View
             style={{
                 flexDirection: 'row',
-                backgroundColor: colors.surface,
+                backgroundColor: colors.primary,
                 paddingVertical: 8,
                 paddingBottom: 12,
                 borderTopWidth: 0.5,
@@ -167,7 +167,7 @@ const CustomTabBarButton = ({
         if (isFocused) {
             Animated.sequence([
                 Animated.timing(animatedIconScale, {
-                    toValue: 0.8,
+                    toValue: 1.4,
                     duration: 100,
                     useNativeDriver: true,
                 }),
@@ -186,7 +186,7 @@ const CustomTabBarButton = ({
             ]).start();
         } else {
             Animated.spring(animatedIconScale, {
-                toValue: 1,
+                toValue: 1.1,
                 tension: 100,
                 friction: 4,
                 useNativeDriver: true,
@@ -242,7 +242,7 @@ const CustomTabBarButton = ({
                         width: 50,
                         height: 50,
                         borderRadius: 28,
-                        backgroundColor: colors.primary,
+                        backgroundColor: colors.surface,
                         opacity: 0.08,
                         transform: [{ scale: animatedBackgroundScale }],
                     }}
@@ -258,11 +258,11 @@ const CustomTabBarButton = ({
                     <MaterialIcons
                         name={iconName}
                         size={26}
-                        color={isFocused ? colors.primary : colors.textSecondary}
+                        color={isFocused ? colors.surface : colors.text}
                         style={{
-                            textShadowColor: isFocused ? colors.primary : 'transparent',
+                            textShadowColor: isFocused ? colors.surface : 'transparent',
                             textShadowOffset: { width: 0, height: 0 },
-                            textShadowRadius: isFocused ? 4 : 0,
+                            textShadowRadius: isFocused ? 6 : 0,
                         }}
                     />
                 </Animated.View>
@@ -272,7 +272,7 @@ const CustomTabBarButton = ({
                     style={{
                         fontSize: 10,
                         fontWeight: isFocused ? '700' : '500',
-                        color: isFocused ? colors.primary : colors.textSecondary,
+                        color: isFocused ? colors.surface : colors.text,
                         opacity: animatedOpacity,
                         position: 'absolute',
                         bottom: -15,
@@ -295,11 +295,11 @@ const CustomTabBarButton = ({
                     <Animated.View
                         style={{
                             position: 'absolute',
-                            top: -4,
+                            top: -8,
                             width: 6,
                             height: 6,
                             borderRadius: 3,
-                            backgroundColor: colors.primary,
+                            backgroundColor: colors.surface,
                             opacity: animatedOpacity,
                             transform: [
                                 {

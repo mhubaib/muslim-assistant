@@ -31,11 +31,10 @@ export default function DrawerNavigator() {
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
                 },
-                headerTintColor: colors.text, // Icon and text color
                 headerTitleStyle: {
                     fontWeight: 'bold',
                     fontSize: 18,
-                    color: isDark ? colors.text : '#ffffff',
+                    color: colors.text,
                 },
                 // Drawer icon styling
                 drawerIcon: ({ focused, color, size }) => (
