@@ -48,7 +48,7 @@ export default function DrawerNavigator() {
                 // Drawer styling
                 drawerStyle: {
                     backgroundColor: colors.surface,
-                    width: 250,
+                    width: 280,
                 },
                 drawerContentStyle: {
                     marginTop: 50,
