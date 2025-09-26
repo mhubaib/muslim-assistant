@@ -1,42 +1,50 @@
-import { Platform } from 'react-native';
-import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import Geolocation from '@react-native-community/geolocation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from "react-native";
+import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
+import Geolocation from "@react-native-community/geolocation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export class LocationService {
+export default class LocationService {
+    static getPermissionKey() {
+        return Platform.OS === "ios"
+            ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+            : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    }
+
     static async requestLocationPermission() {
         try {
-            const permission = Platform.OS === 'ios'
-                ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-                : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-
+            const permission = this.getPermissionKey();
             const result = await request(permission);
 
-            if (result === RESULTS.GRANTED) {
-                await AsyncStorage.setItem('locationPermissionGranted', 'true');
-                return { success: true, granted: true };
+            const granted = result === RESULTS.GRANTED;
+            if (granted) {
+                await AsyncStorage.setItem("locationPermissionGranted", "true");
             }
 
-            return { success: false, granted: false, reason: 'Permission denied' };
+            return {
+                success: granted,
+                granted,
+                reason: granted ? null : "Permission denied",
+            };
         } catch (error) {
-            return { success: false, granted: false, reason: error.message };
+            return {
+                success: false,
+                granted: false,
+                reason: error.message || "Unknown error",
+            };
         }
     }
 
     static async checkLocationPermission() {
         try {
-            const permission = Platform.OS === 'ios'
-                ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-                : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-
+            const permission = this.getPermissionKey();
             const result = await check(permission);
             return result === RESULTS.GRANTED;
-        } catch (error) {
+        } catch {
             return false;
         }
     }
 
-    static getCurrentLocation() {
+    static async getCurrentLocation() {
         return new Promise((resolve, reject) => {
             Geolocation.getCurrentPosition(
                 (position) => {
@@ -51,5 +59,3 @@ export class LocationService {
         });
     }
 }
-
-export default LocationService;

@@ -14,7 +14,7 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
     const systemColorScheme = useColorScheme();
-    const [theme, setTheme] = useState('system'); // 'light', 'dark', 'system'
+    const [theme, setTheme] = useState('system'); 
     const [isDark, setIsDark] = useState(false);
 
     // Load saved theme preference
@@ -55,50 +55,76 @@ export const ThemeProvider = ({ children }) => {
         saveThemePreference(newTheme);
     };
     
-    const styles1 = {
+    const styles = {
         light: {
             bg: {
-
+                primary: '#E8F5E9', // Hijau sangat muda untuk latar belakang
+                secondary: '#FFFFFF', // Putih bersih untuk kontras
+                accent: '#4CAF50', // Hijau Islami sebagai aksen
             },
             text: {
-
+                primary: '#1A3C34', // Hijau tua untuk teks utama
+                secondary: '#4A4A4A', // Abu-abu gelap untuk teks sekunder
+                accent: '#388E3C', // Hijau sedang untuk teks aksen
             },
             border: {
-
+                primary: '#81C784', // Hijau muda untuk border
+                secondary: '#B0BEC5', // Abu-abu muda untuk border sekunder
             },
             button: {
-
+                background: '#4CAF50', // Hijau untuk tombol
+                text: '#FFFFFF', // Teks putih untuk kontras
+                border: '#388E3C', // Border hijau sedikit lebih gelap
+                disabled: '#A5D6A7', // Hijau pudar untuk tombol nonaktif
             },
             card: {
-
+                background: '#F1F8E9', // Hijau sangat muda untuk kartu
+                shadow: '#C8E6C9', // Bayangan hijau lembut
+                border: '#A5D6A7', // Border hijau muda
             },
             input: {
-
+                background: '#FFFFFF', // Latar belakang putih untuk input
+                text: '#1A3C34', // Teks hijau tua
+                border: '#81C784', // Border hijau muda
+                placeholder: '#90A4AE', // Abu-abu untuk placeholder
             },
         },
         dark: {
             bg: {
-
+                primary: '#1A3C34', // Hijau tua untuk latar belakang
+                secondary: '#263238', // Abu-abu gelap untuk kontras
+                accent: '#4CAF50', // Hijau Islami sebagai aksen
             },
             text: {
-
+                primary: '#E8F5E9', // Hijau sangat muda untuk teks utama
+                secondary: '#B0BEC5', // Abu-abu muda untuk teks sekunder
+                accent: '#81C784', // Hijau muda untuk teks aksen
             },
             border: {
-
+                primary: '#4CAF50', // Hijau untuk border
+                secondary: '#455A64', // Abu-abu gelap untuk border sekunder
             },
             button: {
-
+                background: '#388E3C', // Hijau sedikit lebih gelap untuk tombol
+                text: '#E8F5E9', // Teks hijau sangat muda
+                border: '#2E7D32', // Border hijau lebih tua
+                disabled: '#4A7043', // Hijau sangat gelap untuk tombol nonaktif
             },
             card: {
-
+                background: '#263238', // Abu-abu gelap untuk kartu
+                shadow: '#1A3C34', // Bayangan hijau tua
+                border: '#4CAF50', // Border hijau
             },
             input: {
-
+                background: '#37474F', // Abu-abu gelap untuk input
+                text: '#E8F5E9', // Teks hijau sangat muda
+                border: '#4CAF50', // Border hijau
+                placeholder: '#78909C', // Abu-abu untuk placeholder
             },
         },
     };
 
-    const currentColors = colors[isDark ? 'dark' : 'light'];
+    const currentColors = styles[isDark ? 'dark' : 'light'];
 
     const value = {
         theme,
