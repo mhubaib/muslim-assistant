@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../config/firebase';
 import { addDoc, doc, serverTimestamp } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, signOut as firebaseSignOut } from 'firebase/auth';
+import { Alert } from 'react-native';
 
 const AuthContext = createContext({});
 
@@ -66,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     const signUp = async (firstName, lastName, email, password, confirmPassword) => {
         try {
             setLoading(true);
-            
+
             if (password !== confirmPassword) {
                 setError('Oups! Passwords do not match.');
                 return { success: false };
@@ -140,11 +141,12 @@ export const AuthProvider = ({ children }) => {
     const signOut = async () => {
         try {
             setLoading(true);
-            await signOut(auth);
+            await firebaseSignOut(auth);
             return { success: true };
-        } catch (err) {
-            setError('Oups! Something went wrong. Please try again.');
-            return { success: false };
+        } catch (error) {
+            console.error('Logout failed: ', error.message);
+            setError('Failed to logout. Please try again.');
+            return { success: false, error: error.message };
         } finally {
             setLoading(false);
         }
@@ -166,6 +168,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         error,
+        setError,
         loading,
         initializing,
         hasCompletedOnboarding,

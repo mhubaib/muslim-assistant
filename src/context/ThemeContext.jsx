@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -58,32 +58,32 @@ export const ThemeProvider = ({ children }) => {
     // Theme colors and styles
     const colors = {
         light: {
-            primary: '#4CAF50',
-            secondary: '#64748b',
-            background: '#ffffff',
-            surface: '#f8fafc',
-            text: '#1e293b',
-            textSecondary: '#64748b',
-            border: '#e2e8f0',
-            success: '#10b981',
-            warning: '#f59e0b',
-            error: '#ef4444',
-            accent: '#8b5cf6',
-            card: '#ffffff',
+            primary: '#40916c',      // Main green
+            secondary: '#74c69d',    // Light green
+            background: '#d8f3dc',   // Very light green background
+            surface: '#b7e4c7',      // Light green surface
+            text: '#081c15',         // Dark green text
+            textSecondary: '#1b4332', // Medium dark green
+            border: '#95d5b2',       // Medium light green
+            success: '#52b788',      // Success green
+            warning: '#f59e0b',      // Keep original warning
+            error: '#ef4444',        // Keep original error
+            accent: '#2d6a4f',       // Dark green accent
+            card: '#b7e4c7',         // Light green card
         },
         dark: {
-            primary: '#4CAF50',
-            secondary: '#94a3b8',
-            background: '#0f172a',
-            surface: '#1e293b',
-            text: '#f1f5f9',
-            textSecondary: '#94a3b8',
-            border: '#334155',
-            success: '#10b981',
-            warning: '#f59e0b',
-            error: '#ef4444',
-            accent: '#a855f7',
-            card: '#1e293b',
+            primary: '#52b788',      // Brighter green for dark mode
+            secondary: '#74c69d',    // Light green
+            background: '#081c15',   // Very dark green background
+            surface: '#1b4332',      // Dark green surface
+            text: '#d8f3dc',         // Light green text
+            textSecondary: '#95d5b2', // Medium light green
+            border: '#2d6a4f',       // Medium dark green
+            success: '#74c69d',      // Success light green
+            warning: '#f59e0b',      // Keep original warning
+            error: '#ef4444',        // Keep original error
+            accent: '#95d5b2',       // Light green accent
+            card: '#1b4332',         // Dark green card
         },
     };
 
@@ -93,45 +93,45 @@ export const ThemeProvider = ({ children }) => {
     const styles = {
         // Backgrounds
         bg: {
-            primary: isDark ? 'bg-slate-900' : 'bg-white',
-            secondary: isDark ? 'bg-slate-800' : 'bg-slate-50',
-            surface: isDark ? 'bg-slate-700' : 'bg-white',
-            accent: isDark ? 'bg-green-600' : 'bg-green-500',
-            card: isDark ? 'bg-slate-800' : 'bg-white',
+            primary: isDark ? 'bg-green-custom-800' : 'bg-green-custom-50',     // #081c15 : #d8f3dc
+            secondary: isDark ? 'bg-green-custom-700' : 'bg-green-custom-100',  // #1b4332 : #b7e4c7
+            surface: isDark ? 'bg-green-custom-700' : 'bg-green-custom-100',    // #1b4332 : #b7e4c7
+            accent: isDark ? 'bg-green-custom-400' : 'bg-green-custom-500',     // #52b788 : #40916c
+            card: isDark ? 'bg-green-custom-700' : 'bg-green-custom-100',       // #1b4332 : #b7e4c7
         },
         // Text colors
         text: {
-            primary: isDark ? 'text-slate-100' : 'text-slate-900',
-            secondary: isDark ? 'text-slate-400' : 'text-slate-600',
-            accent: isDark ? 'text-green-400' : 'text-green-600',
-            muted: isDark ? 'text-slate-500' : 'text-slate-500',
+            primary: isDark ? 'text-green-custom-50' : 'text-green-custom-800',   // #d8f3dc : #081c15
+            secondary: isDark ? 'text-green-custom-200' : 'text-green-custom-700', // #95d5b2 : #1b4332
+            accent: isDark ? 'text-green-custom-200' : 'text-green-custom-600',   // #95d5b2 : #2d6a4f
+            muted: isDark ? 'text-green-custom-300' : 'text-green-custom-500',    // #74c69d : #40916c
         },
         // Borders
         border: {
-            default: isDark ? 'border-slate-600' : 'border-slate-200',
-            light: isDark ? 'border-slate-700' : 'border-slate-100',
-            accent: isDark ? 'border-green-500' : 'border-green-300',
+            default: isDark ? 'border-green-custom-600' : 'border-green-custom-200',  // #2d6a4f : #95d5b2
+            light: isDark ? 'border-green-custom-700' : 'border-green-custom-100',    // #1b4332 : #b7e4c7
+            accent: isDark ? 'border-green-custom-400' : 'border-green-custom-500',   // #52b788 : #40916c
         },
         // Buttons
         button: {
             primary: isDark
-                ? 'bg-green-600 hover:bg-green-700'
-                : 'bg-green-500 hover:bg-green-600',
+                ? 'bg-green-custom-400 hover:bg-green-custom-300'   // #52b788 : hover lighter in dark
+                : 'bg-green-custom-500 hover:bg-green-custom-600',  // #40916c : hover darker in light
             secondary: isDark
-                ? 'bg-slate-700 hover:bg-slate-600 border-slate-600'
-                : 'bg-slate-100 hover:bg-slate-200 border-slate-300',
+                ? 'bg-green-custom-700 hover:bg-green-custom-600 border-green-custom-600'      // #1b4332 surfaces
+                : 'bg-green-custom-100 hover:bg-green-custom-200 border-green-custom-200',   // #b7e4c7 surfaces
             outline: isDark
-                ? 'border-slate-600 hover:bg-slate-800'
-                : 'border-slate-300 hover:bg-slate-50',
+                ? 'border-green-custom-600 hover:bg-green-custom-700'  // #2d6a4f border
+                : 'border-green-custom-200 hover:bg-green-custom-50',  // #95d5b2 border
         },
         // Cards
         card: isDark
-            ? 'bg-slate-800 border-slate-700'
-            : 'bg-white border-slate-200',
+            ? 'bg-green-custom-700 border-green-custom-600'     // #1b4332 : #2d6a4f
+            : 'bg-green-custom-100 border-green-custom-200',   // #b7e4c7 : #95d5b2
         // Input fields
         input: isDark
-            ? 'bg-slate-800 border-slate-600 text-slate-100 placeholder-slate-400'
-            : 'bg-white border-slate-300 text-slate-900 placeholder-slate-500',
+            ? 'bg-green-custom-700 border-green-custom-600 text-green-custom-50 placeholder-green-custom-300'    // Dark theme
+            : 'bg-green-custom-50 border-green-custom-200 text-green-custom-800 placeholder-green-custom-500',   // Light theme
     };
 
     const value = {

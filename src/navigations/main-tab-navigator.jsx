@@ -4,6 +4,7 @@ import PrayerTimesScreen from '../screens/main-screens/prayer-times-screen'
 import CalenderScreen from '../screens/main-screens/calender-screen'
 import QiblatScreen from '../screens/main-screens/qiblat-screen'
 import MaterialIcons from '@react-native-vector-icons/material-icons'
+import { useTheme } from '../context/ThemeContext'
 
 const Tab = createBottomTabNavigator()
 
@@ -23,19 +24,21 @@ const getTabBarIcon = (route) => (color) => {
 }
 
 export default function MainTabNavigator() {
+    const { colors } = useTheme();
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: getTabBarIcon(route.name),
-                tabBarActiveTintColor: '#00a6fb', 
-                tabBarInactiveTintColor: '#9E9E9E', 
+                tabBarActiveTintColor: colors.primary,
+                tabBarInactiveTintColor: colors.textSecondary,
                 tabBarStyle: {
-                    backgroundColor: '#FFFFFF', 
+                    backgroundColor: colors.primary,
                     borderTopWidth: 1,
-                    borderTopColor: '#E0E0E0',
+                    borderTopColor: colors.border,
                     height: 65,
-                    elevation: 8, 
-                    shadowColor: '#000', 
+                    elevation: 8,
+                    shadowColor: '#000',
                     shadowOffset: {
                         width: 0,
                         height: 0,
@@ -46,16 +49,41 @@ export default function MainTabNavigator() {
                 tabBarLabelStyle: {
                     fontSize: 12,
                     fontWeight: '600',
+                    color: colors.text,
                 },
                 tabBarIconStyle: {
                     marginTop: 5,
                 },
                 headerShown: false,
             })}>
-            <Tab.Screen name='home' component={HomeScreen} />
-            <Tab.Screen name='prayer-times' component={PrayerTimesScreen} />
-            <Tab.Screen name='calender' component={CalenderScreen} />
-            <Tab.Screen name='qiblat' component={QiblatScreen} />
+            <Tab.Screen
+                name='home'
+                component={HomeScreen}
+                options={{
+                    title: 'Home'
+                }}
+            />
+            <Tab.Screen
+                name='prayer-times'
+                component={PrayerTimesScreen}
+                options={{
+                    title: 'Prayer Times'
+                }}
+            />
+            <Tab.Screen
+                name='calender'
+                component={CalenderScreen}
+                options={{
+                    title: 'Calendar'
+                }}
+            />
+            <Tab.Screen
+                name='qiblat'
+                component={QiblatScreen}
+                options={{
+                    title: 'Qiblat'
+                }}
+            />
         </Tab.Navigator>
     )
 }
