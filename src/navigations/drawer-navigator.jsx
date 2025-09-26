@@ -48,7 +48,7 @@ export default function DrawerNavigator() {
                 // Drawer styling
                 drawerStyle: {
                     backgroundColor: colors.surface,
-                    width: 280,
+                    width: 250,
                 },
                 drawerContentStyle: {
                     marginTop: 50,
@@ -160,7 +160,7 @@ export default function DrawerNavigator() {
                 name="setting"
                 component={SettingScreen}
                 options={{
-                    title: 'Settings',
+                    title: 'Setting',
                     drawerIcon: ({ focused, size, color }) => (
                         <MaterialIcons
                             name="settings"

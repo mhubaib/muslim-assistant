@@ -1,7 +1,6 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import {
     View,
-    Text,
     TouchableOpacity,
     Animated,
     Dimensions,
@@ -16,9 +15,9 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
     const tabWidth = width / state.routes.length;
 
     // Animated indicator that slides between tabs
-    const animatedIndicator = React.useRef(new Animated.Value(0)).current;
+    const animatedIndicator = useRef(new Animated.Value(0)).current;
 
-    React.useEffect(() => {
+    useEffect(() => {
         Animated.spring(animatedIndicator, {
             toValue: state.index,
             tension: 100,
@@ -64,7 +63,7 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
                 backgroundColor: colors.surface,
                 paddingVertical: 8,
                 paddingBottom: 12,
-                borderTopWidth: 1,
+                borderTopWidth: 0.5,
                 borderTopColor: colors.border,
                 elevation: 12,
                 shadowColor: '#000',
@@ -77,28 +76,6 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
                 position: 'relative',
             }}
         >
-            {/* Sliding indicator background */}
-            <Animated.View
-                style={{
-                    position: 'absolute',
-                    top: 6,
-                    left: 0,
-                    width: tabWidth,
-                    height: 50,
-                    backgroundColor: colors.primary,
-                    opacity: 0.05,
-                    borderRadius: 25,
-                    transform: [
-                        {
-                            translateX: animatedIndicator.interpolate({
-                                inputRange: state.routes.map((_, i) => i),
-                                outputRange: state.routes.map((_, i) => i * tabWidth),
-                            })
-                        }
-                    ],
-                }}
-            />
-            {/* Tab buttons */}
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
                 const isFocused = state.index === index;
@@ -147,15 +124,14 @@ const CustomTabBarButton = ({
     iconName,
     label,
     colors,
-    tabWidth,
 }) => {
-    const animatedScale = React.useRef(new Animated.Value(1)).current;
-    const animatedOpacity = React.useRef(new Animated.Value(0)).current;
-    const animatedIconScale = React.useRef(new Animated.Value(1)).current;
-    const animatedTranslateY = React.useRef(new Animated.Value(0)).current;
-    const animatedBackgroundScale = React.useRef(new Animated.Value(0)).current;
+    const animatedScale = useRef(new Animated.Value(1)).current;
+    const animatedOpacity = useRef(new Animated.Value(0)).current;
+    const animatedIconScale = useRef(new Animated.Value(1)).current;
+    const animatedTranslateY = useRef(new Animated.Value(0)).current;
+    const animatedBackgroundScale = useRef(new Animated.Value(0)).current;
 
-    React.useEffect(() => {
+    useEffect(() => {
         // Scale animation for the entire button
         Animated.spring(animatedScale, {
             toValue: isFocused ? 1.1 : 1,
@@ -183,7 +159,7 @@ const CustomTabBarButton = ({
         Animated.spring(animatedBackgroundScale, {
             toValue: isFocused ? 1 : 0,
             tension: 100,
-            friction: 6,
+            friction: 4,
             useNativeDriver: true,
         }).start();
 
@@ -263,8 +239,8 @@ const CustomTabBarButton = ({
                 <Animated.View
                     style={{
                         position: 'absolute',
-                        width: 56,
-                        height: 56,
+                        width: 50,
+                        height: 50,
                         borderRadius: 28,
                         backgroundColor: colors.primary,
                         opacity: 0.08,
@@ -299,7 +275,7 @@ const CustomTabBarButton = ({
                         color: isFocused ? colors.primary : colors.textSecondary,
                         opacity: animatedOpacity,
                         position: 'absolute',
-                        bottom: -20,
+                        bottom: -15,
                         textAlign: 'center',
                         transform: [
                             {

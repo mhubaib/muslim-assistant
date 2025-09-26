@@ -9,7 +9,7 @@ const OnBoardingScreen = ({ navigation }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedTheme, setSelectedTheme] = useState(null);
     const { completeOnboarding } = useAuth();
-    const { changeTheme, styles } = useTheme();
+    const { toggleTheme, changeTheme, colors, styles } = useTheme();
 
     const steps = [
         'theme-selection',
@@ -29,7 +29,8 @@ const OnBoardingScreen = ({ navigation }) => {
                     'Permission Required',
                     'Location permission is needed to provide accurate prayer times for your area.',
                     [
-                        { text: 'Try Again', onPress: () => setCurrentStep(1) }
+                        // { text: 'Skip', onPress: () => setCurrentStep(2) },
+                        { text: 'Try Again', onPress: requestLocationPermission }
                     ]
                 );
             }
@@ -41,7 +42,7 @@ const OnBoardingScreen = ({ navigation }) => {
 
     const completeOnboardingFlow = async () => {
         await completeOnboarding();
-        navigation.replace('auth', { screen: 'register'});
+        navigation.replace('auth');
     };
 
     const renderThemeSelection = () => (
@@ -96,6 +97,13 @@ const OnBoardingScreen = ({ navigation }) => {
                 onPress={requestLocationPermission}
             >
                 <Text className="text-white text-base font-semibold text-center">Grant Location Permission</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                className="py-4 px-8 rounded-lg w-4/5"
+                onPress={() => setCurrentStep(2)}
+            >
+                <Text className={`${styles.text.accent} text-base font-semibold text-center`}>Skip for Now</Text>
             </TouchableOpacity>
         </View>
     );
