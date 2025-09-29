@@ -10,8 +10,8 @@ import {
     Platform,
     ScrollView,
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/auth-context';
+import { useTheme } from '../../context/theme-context';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');

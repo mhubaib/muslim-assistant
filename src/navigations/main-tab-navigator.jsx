@@ -3,7 +3,7 @@ import HomeScreen from '../screens/main-screens/home-screen'
 import PrayerTimesScreen from '../screens/main-screens/prayer-times-screen'
 import CalenderScreen from '../screens/main-screens/calender-screen'
 import QiblatScreen from '../screens/main-screens/qiblat-screen'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../context/theme-context'
 import CustomTabBar from '../components/custom-tab-bar'
 
 const Tab = createBottomTabNavigator()

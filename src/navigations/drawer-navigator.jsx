@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MainTabNavigator from "./main-tab-navigator";
 import QuranScreen from "../screens/quran/quran-screen";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../context/theme-context";
 import MaterialIcons from '@react-native-vector-icons/material-icons';
 import CustomDrawerContent from '../components/custom-drawer-content';
 import HadistScreen from "../screens/hadist/hadist-screen";

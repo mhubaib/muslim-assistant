@@ -1,7 +1,7 @@
 import { enableScreens } from 'react-native-screens';
 import AppNavigator from './src/navigations/app-navigator';
-import { AuthProvider } from './src/context/AuthContext';
-import { ThemeProvider } from './src/context/ThemeContext';
+import { AuthProvider } from './src/context/auth-context';
+import { ThemeProvider } from './src/context/theme-context';
 
 enableScreens()
 

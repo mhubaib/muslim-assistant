@@ -8,7 +8,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import auth from 'firebase/auth';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/auth-context';
 
 export default function VerifyEmailScreen({ navigation }) {
     const [loading, setLoading] = useState(false);

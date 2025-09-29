@@ -1,5 +1,5 @@
 import { Switch, Text, View } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/theme-context";
 import { useState } from "react";
 
 export default function HomeScreen({ navigation }) {

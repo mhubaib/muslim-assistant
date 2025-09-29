@@ -11,8 +11,8 @@ import {
     DrawerItemList,
 } from '@react-navigation/drawer';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
-import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/theme-context';
+import { useAuth } from '../context/auth-context';
 
 export default function CustomDrawerContent(props) {
     const { colors } = useTheme();

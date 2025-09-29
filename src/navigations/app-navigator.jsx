@@ -2,10 +2,10 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, ActivityIndicator } from 'react-native';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth-context';
 import AuthNavigator from "./auth-navigator";
 import DrawerNavigator from "./drawer-navigator";
-import OnBoardingScreen from "../screens/onBoarding/on-boarding-screen";
+import OnBoardingScreen from "../screens/on-boarding/on-boarding-screen";
 
 const Stack = createNativeStackNavigator();
 
