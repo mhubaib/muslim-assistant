@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/auth-context';
 import { useTheme } from '../../context/theme-context';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { StyleSheet, Image } from 'react-native';
 import Input from '../../components/input';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AuthLayout from './layouts/auth-layout';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -47,14 +47,12 @@ export default function RegisterScreen({ navigation }) {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.bg.primary }]}>
-            <KeyboardAwareScrollView>
-                <View style={styles.imageContainer}>
-                    <View style={[styles.image, { backgroundColor: colors.card.background }]}>
-                        <Image source={require('../../assets/muslim-app-logo.png')} style={styles.imageText} />
-                    </View>
-                </View>
-                <Input label={"FirstName :"} type={'password'} />
-            </KeyboardAwareScrollView>
+            <AuthLayout>
+                <Input label={"FirstName :"} placeholder={"firstname..."} />
+                <Input label={"LastName :"} />
+                <Input />
+                <Input />
+            </AuthLayout>
         </SafeAreaView>
     );
 }
@@ -62,8 +60,9 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
-        alignItems: 'center',
+    },
+    scrollContent: {
+        flexGrow: 1,
     },
     imageContainer: {
         marginBottom: 30,
