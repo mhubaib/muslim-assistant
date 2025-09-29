@@ -6,6 +6,7 @@ import { useAuth } from '../context/auth-context';
 import AuthNavigator from "./auth-navigator";
 import DrawerNavigator from "./drawer-navigator";
 import OnBoardingScreen from "../screens/on-boarding/on-boarding-screen";
+import { navigationRef } from '../utils/navigation-ref';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,14 +15,16 @@ export default function AppNavigator() {
 
     if (initializing) {
         return (
-            <View className='flex-1 justify-center items-center'>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#4CAF50" />
             </View>
         );
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            ref={navigationRef}
+        >
             <Stack.Navigator screenOptions={{ headerShown: false }}>
 
                 {!hasCompletedOnboarding ? (

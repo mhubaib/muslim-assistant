@@ -10,8 +10,9 @@ import WelcomeScreen from './welcome-screen';
 import ThemeSelectionScreen from './theme-selection-screen';
 import LocationPermissionScreen from './location-permission-screen';
 import CompleteScreen from './complete-screen';
+import { navigate } from '../../utils/navigation-ref';
 
-const OnBoardingScreen = ({ navigation }) => {
+const OnBoardingScreen = () => {
     const [currentStep, setCurrentStep] = useState(0);
     const [selectedTheme, setSelectedTheme] = useState(null);
     const { completeOnboarding } = useAuth();
@@ -49,7 +50,7 @@ const OnBoardingScreen = ({ navigation }) => {
 
     const completeOnboardingFlow = async () => {
         await completeOnboarding();
-        navigation.replace('auth');
+        navigate('auth', { screen: 'register' });
     };
 
     const renderCurrentStep = () => {

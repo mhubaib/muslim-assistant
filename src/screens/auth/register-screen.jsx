@@ -12,6 +12,10 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/auth-context';
 import { useTheme } from '../../context/theme-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StyleSheet, Image } from 'react-native';
+import Input from '../../components/input';
 
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -20,7 +24,7 @@ export default function RegisterScreen({ navigation }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const { signUp, loading, error } = useAuth();
-    const { colors, styles } = useTheme();
+    const { colors } = useTheme();
 
     const handleRegister = async () => {
 
@@ -42,88 +46,40 @@ export default function RegisterScreen({ navigation }) {
     };
 
     return (
-        <KeyboardAvoidingView
-            className={`flex-1 ${styles.bg.primary}`}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-            <ScrollView className="flex-grow">
-                <View className="flex-1 justify-center px-5 min-h-full">
-                    <Text className={`text-3xl font-bold text-center mb-2 ${styles.text.primary}`}>Create Account</Text>
-                    <Text className={`text-base text-center mb-10 ${styles.text.secondary}`}>Join us on your spiritual journey</Text>
-
-                    <View className="w-full">
-                        <TextInput
-                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
-                            placeholder="Full Name"
-                            placeholderTextColor={colors.textSecondary}
-                            value={firstName}
-                            onChangeText={setFirstName}
-                            autoCapitalize="words"
-                            autoCorrect={false}
-                        />
-
-                        <TextInput
-                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
-                            placeholder="Full Name"
-                            placeholderTextColor={colors.textSecondary}
-                            value={lastName}
-                            onChangeText={setLastName}
-                            autoCapitalize="words"
-                            autoCorrect={false}
-                        />
-
-                        <TextInput
-                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
-                            placeholder="Email"
-                            placeholderTextColor={colors.textSecondary}
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                        />
-
-                        <TextInput
-                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
-                            placeholder="Password"
-                            placeholderTextColor={colors.textSecondary}
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                            autoCapitalize="none"
-                        />
-
-                        <TextInput
-                            className={`${styles.input} border rounded-lg p-4 mb-4 text-base`}
-                            placeholder="Confirm Password"
-                            placeholderTextColor={colors.textSecondary}
-                            value={confirmPassword}
-                            onChangeText={setConfirmPassword}
-                            secureTextEntry
-                            autoCapitalize="none"
-                        />
-
-                        <TouchableOpacity
-                            className={`${loading ? 'bg-gray-400' : styles.button.primary} p-4 rounded-lg items-center mt-2`}
-                            onPress={handleRegister}
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <ActivityIndicator color="#ffffff" />
-                            ) : (
-                                <Text className="text-white text-base font-semibold">Create Account</Text>
-                            )}
-                        </TouchableOpacity>
-
-                        <View className="flex-row justify-center mt-5">
-                            <Text className={`text-base ${styles.text.secondary}`}>Already have an account? </Text>
-                            <TouchableOpacity onPress={navigateToLogin}>
-                                <Text className={`text-base ${styles.text.accent} font-semibold`}>Sign In</Text>
-                            </TouchableOpacity>
-                        </View>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.bg.primary }]}>
+            <KeyboardAwareScrollView>
+                <View style={styles.imageContainer}>
+                    <View style={[styles.image, { backgroundColor: colors.card.background }]}>
+                        <Image source={require('../../assets/muslim-app-logo.png')} style={styles.imageText} />
                     </View>
                 </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                <Input label={"FirstName :"} type={'password'} />
+            </KeyboardAwareScrollView>
+        </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+        alignItems: 'center',
+    },
+    imageContainer: {
+        marginBottom: 30,
+        alignItems: 'center',
+    },
+    image: {
+        width: 220,
+        height: 220,
+        borderRadius: 110,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5,
+    },
+    imageText: {
+        width: 160,
+        height: 160,
+        resizeMode: 'contain',
+    },
+})
