@@ -6,7 +6,6 @@ import { useAuth } from '../context/auth-context';
 import AuthNavigator from "./auth-navigator";
 import DrawerNavigator from "./drawer-navigator";
 import OnBoardingScreen from "../screens/on-boarding/on-boarding-screen";
-import { navigationRef } from '../utils/navigation-ref';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +22,6 @@ export default function AppNavigator() {
 
     return (
         <NavigationContainer
-            ref={navigationRef}
         >
             <Stack.Navigator screenOptions={{ headerShown: false }}>
 

@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [initializing, setInitializing] = useState(true);
     const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+    const [navigateToRegister, setNavigateToRegister] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }) => {
         try {
             await AsyncStorage.setItem('hasCompletedOnboarding', 'true');
             setHasCompletedOnboarding(true);
+            setNavigateToRegister(true);
         } catch (err) {
             setError('Error completing onboarding. Please try again.');
         }
@@ -171,6 +173,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         initializing,
         hasCompletedOnboarding,
+        navigateToRegister,
+        setNavigateToRegister,
         signUp,
         signIn,
         signOut,
