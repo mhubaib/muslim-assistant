@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../context/theme-context';
-import MaterialIcons from '@react-native-vector-icons/material-icons';
+import FontAwesome from '@react-native-vector-icons/fontawesome';
 
 const CustomButton = ({
     title,
@@ -110,7 +110,7 @@ const CustomButton = ({
             ) : (
                 <>
                     {icon && (
-                        <MaterialIcons name={icon} size={sizeIcon} />
+                        <FontAwesome name={icon} size={sizeIcon} style={styles.icon} />
                     )}
                     <Text style={[getTextStyle(), textStyle]}>{title}</Text>
                 </>
@@ -156,6 +156,9 @@ const styles = StyleSheet.create({
     largeText: {
         fontSize: 18,
     },
+    icon: {
+        marginRight: 10,
+    }
 });
 
 export default CustomButton;

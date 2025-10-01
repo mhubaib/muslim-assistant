@@ -1,7 +1,7 @@
-import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../context/theme-context";
 import { useState } from "react";
+import FontAwesome from "@react-native-vector-icons/fontawesome";
 
 
 export default function Input({ label, rightIcon, name, placeholder, type, value, onChangeText }) {
@@ -16,8 +16,7 @@ export default function Input({ label, rightIcon, name, placeholder, type, value
 
     const styles = StyleSheet.create({
         container: {
-            paddingVertical: 10,
-            minWidth: '100%',
+            paddingVertical: 8,
         },
         label: {
             fontSize: 16,
@@ -58,7 +57,7 @@ export default function Input({ label, rightIcon, name, placeholder, type, value
             )}
             <View style={styles.inputContainer}>
                 {rightIcon && (
-                    <MaterialIcons name={name} size={24} style={styles.rightIcon} />
+                    <FontAwesome name={name} size={24} style={styles.rightIcon} />
                 )}
                 <TextInput
                     style={styles.input}
@@ -70,7 +69,7 @@ export default function Input({ label, rightIcon, name, placeholder, type, value
                 />
                 {isPassword && (
                     <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
-                        <MaterialIcons name={isPasswordVisible ? 'visibility-off' : 'visibility'} size={24} />
+                        <FontAwesome name={isPasswordVisible ? 'eye-slash' : 'eye'} size={24} />
                     </TouchableOpacity>
                 )}
             </View>

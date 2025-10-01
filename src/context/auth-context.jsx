@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [initializing, setInitializing] = useState(true);
     const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
     const [navigateToRegister, setNavigateToRegister] = useState(false);
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const signUp = async (firstName, lastName, email, password, confirmPassword) => {
+    const signUp = async (username, email, password, confirmPassword) => {
         try {
             setLoading(true);
 
@@ -78,8 +78,8 @@ export const AuthProvider = ({ children }) => {
             } else if (!/\S+@\S+\.\S+/.test(email)) {
                 setError('Oups! Invalid email address.');
                 return { success: false };
-            } else if (firstName.trim() === '' || lastName.trim() === '') {
-                setError('Oups! First name and last name cannot be empty.');
+            } else if (username.trim() === '') {
+                setError('Oups! Username name cannot be empty.');
                 return { success: false };
             } else {
                 setError(null);
@@ -87,14 +87,13 @@ export const AuthProvider = ({ children }) => {
 
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             await updateProfile(userCredential.user, {
-                displayName: `${firstName} ${lastName}`
+                displayName: `${username}`
             });
 
             const account = userCredential.user;
 
             await addDoc(doc(db, 'users', account.uid), {
-                firstName: firstName,
-                lastName: lastName,
+                username: username,
                 email: email,
                 createdAt: serverTimestamp(),
                 uid: user.uid,
