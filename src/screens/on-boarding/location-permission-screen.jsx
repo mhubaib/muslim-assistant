@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../context/theme-context';
 import CustomButton from '../../components/button';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 
 export default function LocationPermissionScreen({ handleGetCurrentLocation, setCurrentStep }) {
     const { colors } = useTheme();
@@ -19,12 +20,9 @@ export default function LocationPermissionScreen({ handleGetCurrentLocation, set
                 Enable location access to get accurate prayer times for your area.
             </Text>
 
-            <CustomButton
-                icon='pin-drop'
-                sizeIcon={40}
-                onPress={handleGetCurrentLocation}
-                size="medium"
-            />
+            <TouchableOpacity onPress={handleGetCurrentLocation} style={[styles.searchLocationButton, { backgroundColor: colors.button.background }]}>
+                <MaterialIcons name='share-location' size={34} />
+            </TouchableOpacity>
 
             <View style={styles.additionalButtonsContainer}>
                 <CustomButton
@@ -85,5 +83,12 @@ const styles = StyleSheet.create({
     additionalButtonsContainer: {
         flexDirection: 'row',
         marginTop: 20,
+    },
+    searchLocationButton: {
+        width: 60,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 30,
     }
 });

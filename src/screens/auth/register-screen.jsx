@@ -45,6 +45,7 @@ export default function RegisterScreen({ navigation }) {
         <SafeAreaView style={[styles.container, { backgroundColor: colors.bg.primary }]}>
             <AuthLayout>
                 <Text style={[styles.title, { color: colors.text.primary }]}>Create Account</Text>
+                <Text style={[styles.subtitle, { color: colors.text.secondary }]}>Have an account ? <Text style={styles.navigasi} onPress={navigateToLogin}>Sign In</Text></Text>
                 <Input label={"Username :"} placeholder={"username..."} value={username} onChangeText={setUsername} />
                 <Input label={"Email :"} placeholder={"email@sample.com"} value={email} onChangeText={setEmail} />
                 <Input label={"Password :"} placeholder={"********"} type={'password'} value={password} onChangeText={setPassword} />
@@ -84,4 +85,15 @@ const styles = StyleSheet.create({
         height: 160,
         resizeMode: 'contain',
     },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 15,
+    },
+    navigasi: {
+        fontSize: 18,
+        color: '#0bc023ff',
+        fontWeight: '500',
+        textDecorationLine: 'underline',
+    }
 })
